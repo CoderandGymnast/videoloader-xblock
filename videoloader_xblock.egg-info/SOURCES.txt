@@ -1,0 +1,15 @@
+setup.py
+videoloader/__init__.py
+videoloader/videoloader.py
+videoloader/static/README.txt
+videoloader/static/css/video_loader.css
+videoloader/static/html/video_loader.html
+videoloader/static/html/video_persister.html
+videoloader/static/js/src/video_loader.js
+videoloader/static/js/src/video_persister.js
+videoloader_xblock.egg-info/PKG-INFO
+videoloader_xblock.egg-info/SOURCES.txt
+videoloader_xblock.egg-info/dependency_links.txt
+videoloader_xblock.egg-info/entry_points.txt
+videoloader_xblock.egg-info/requires.txt
+videoloader_xblock.egg-info/top_level.txt
