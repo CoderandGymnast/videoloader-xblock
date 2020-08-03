@@ -1,2 +1,1 @@
-# Notes: 
-## Develop on XBlock SDK: 
+README.md
