@@ -25,3 +25,9 @@
 <!--</body>-->
 <!--</html>-->
 
+{% if internal_video_url %}
+<iframe src="{{ internal_video_url }}" style="width: -webkit-fill-available; height: -webkit-fill-available;"></iframe>
+{% else %}
+<p>{{ message }}</p>
+{% endif %}
+

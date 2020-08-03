@@ -27,6 +27,16 @@ class VideoLoaderXBlock(XBlock):
 		scope=Scope.settings,
 	)
 
+	internal_video_url = String(
+		default=None,
+		scope=Scope.settings,
+	)
+
+	message = String(
+		default="'EDIT' this unit to add video.",
+		scope=Scope.settings,
+	)
+
 	def render_template(self, template_path, context):
 		template_str = self.resource_string(template_path)
 		template = Template(template_str)
@@ -45,8 +55,10 @@ class VideoLoaderXBlock(XBlock):
 		"""
 
 		student_context = {
-			"display_name": self.display_name,
+			"message": self.message,
+			"internal_video_url": default_storage.url(self.internal_video_url) if self.internal_video_url else None,
 		}
+		
 		student_context.update(context or {})
 
 		template = self.render_template("static/html/video_loader.html", student_context)
@@ -62,7 +74,7 @@ class VideoLoaderXBlock(XBlock):
 		when viewing courses.
 		"""
 		studio_context = {
-			"display_name": self.display_name,
+			"internal_video_url": default_storage.url(self.internal_video_url),
 		}
 		studio_context.update(context or {})
 
@@ -86,10 +98,8 @@ class VideoLoaderXBlock(XBlock):
 
 		package_file = request.params["file"].file
 
-		print("Uploaded file name: " + str(package_file.name))
-		print("Uploaded file size: " + str(package_file.seek(0, 2)))
-
-		default_storage.save(package_file.name, File(package_file))
+		path = default_storage.save(package_file.name, File(package_file))
+		self.internal_video_url = path
 
 		# TODO: Handle errors.
 		response = {"result": "success", "errors": []}
