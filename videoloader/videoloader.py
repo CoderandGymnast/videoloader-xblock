@@ -12,10 +12,10 @@ from django.core.files import File
 from django.template import Context, Template
 
 # TODO: Read configuration from file.
-CONFIG_PATH = "../config.yml"
-def read_configuration(): 
-	with open(CONFIG_PATH) as reader: 
-		return
+# CONFIG_PATH = "../config.yml"
+# def read_configuration(): 
+# 	with open(CONFIG_PATH) as reader: 
+# 		return
 
 # TODO: Convert text.
 def _(text):
@@ -72,11 +72,9 @@ class VideoLoaderXBlock(XBlock):
 		when viewing courses.
 		"""
 
+		# NOTE: At student view, must use "self" to access fields.
 		student_context = {
-			"display_name": self.display_name,
-			"video_embedded_url": self.video_embedded_url,
-			"message": self.message,
-			"internal_video_url": default_storage.url(self.internal_video_url) if self.internal_video_url else None,
+			"videoloader_xblock": self,
 		}
 		
 		student_context.update(context or {})
@@ -96,7 +94,7 @@ class VideoLoaderXBlock(XBlock):
 
 		studio_context = {
 			"display_name": self.fields["display_name"],
-			"was_url_embedded": self.was_url_embedded,
+			"was_url_embedded": self.fields["was_url_embedded"],
 			"videoloader_xblock": self,
 		}
 		studio_context.update(context or {})

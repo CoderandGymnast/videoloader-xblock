@@ -1,6 +1,8 @@
-{% if video_embedded_url %}
-<iframe src="{{ video_embedded_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="width: -webkit-fill-available; height: 500px;" allowfullscreen></iframe>{% else %}
-<p>{{ message }}</p>
+<p style="font-weight: bold;">{{ videoloader_xblock.display_name }}</p>
+{% if videoloader_xblock.video_embedded_url %}
+<iframe src="{{ videoloader_xblock.video_embedded_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="width: -webkit-fill-available; height: 500px;" allowfullscreen></iframe>
+{% else %}
+<p>{{ videoloader_xblock.message }}</p>
 {% endif %}
 
 <!-- 
