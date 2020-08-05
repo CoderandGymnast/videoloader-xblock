@@ -1,38 +1,36 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-
-<!--<head>-->
-<!--	<meta charset="utf-8">-->
-<!--	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
-<!--	<link href="https://hocdanguitaronline.hachium.com/assets/plugins/videojs/video-js.css" rel="stylesheet"-->
-<!--		  type="text/css">-->
-<!--	<link href="https://hocdanguitaronline.hachium.com/assets/plugins/videojs/videojs-hls-quality-selector.css"-->
-<!--		  rel="stylesheet" type="text/css">-->
-<!--</head>-->
-
-<!--<script type="text/javascript" src="https://hocdanguitaronline.hachium.com/assets/js/jquery.min.js"></script>-->
-<!--<script type='text/javascript'-->
-<!--		src='https://hocdanguitaronline.hachium.com/assets/plugins/videojs/video.min.js'></script>-->
-
-<!--<body>-->
-<!--<div id="content-video-195206">-->
-<!--	<video playsinline id="play-video-195206"-->
-<!--		   width="640" height="480"-->
-<!--		   class="video-js vjs-default-skin"-->
-<!--		   data-setup='{"fluid": true, "controls": true, "autoplay":false, "playbackRates": [0.5, 1, 1.25, 1.5, 2]}'>-->
-<!--	</video>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
-<!-- {% if internal_video_url %}
-<iframe src="{{ internal_video_url }}" style="width: -webkit-fill-available; height: -webkit-fill-available;"></iframe>
-{% else %}
-<p>{{ message }}</p>
-{% endif %} -->
-
 {% if video_embedded_url %}
 <iframe src="{{ video_embedded_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="width: -webkit-fill-available; height: 500px;" allowfullscreen></iframe>{% else %}
 <p>{{ message }}</p>
 {% endif %}
 
+<!-- 
+    NOTE: The following code snippet is used to load .m3u8 video of HACHIUM. 
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href="https://hocdanguitaronline.hachium.com/assets/plugins/videojs/video-js.css" rel="stylesheet"
+		  type="text/css">
+	<link href="https://hocdanguitaronline.hachium.com/assets/plugins/videojs/videojs-hls-quality-selector.css"
+		  rel="stylesheet" type="text/css">
+</head>
+
+<script type="text/javascript" src="https://hocdanguitaronline.hachium.com/assets/js/jquery.min.js"></script>
+<script type='text/javascript'
+		src='https://hocdanguitaronline.hachium.com/assets/plugins/videojs/video.min.js'></script>
+
+<body>
+<div id="content-video-195206">
+	<video playsinline id="play-video-195206"
+		   width="640" height="480"
+		   class="video-js vjs-default-skin"
+		   data-setup='{"fluid": true, "controls": true, "autoplay":false, "playbackRates": [0.5, 1, 1.25, 1.5, 2]}'>
+	</video>
+</div>
+</body>
+</html>
+
+ -->
