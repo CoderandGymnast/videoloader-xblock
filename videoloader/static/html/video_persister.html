@@ -1,23 +1,80 @@
-<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+<!-- https://ionicons.com/ -->
+<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+
+{% load i18n %}
+
+<div class="wrapper-comp-settings is-active editor-with-buttons custom-font" id="settings-tab">
 	<ul class="list-input settings-list">
 
 		<li class="field comp-setting-entry is-set">
+            <div class="wrapper-comp-setting">
+				<label class="label setting-label custom-font" for="display-name">{% trans display_name.display_name %}</label>
+				<div class="tooltip-container">	
+					<i class="ion-information-circled"></i> 
+					<span id="downward-tooltip">{% trans display_name.help %}</span>			
+				</div>
+				<input class="input setting-input custom-font" name="display-name" id="display-name" value="{{ videoloader_xblock.display_name }}" type="text" />
+            </div>
+            <!-- <span class="tip setting-help">{% trans display_name.help %}</span> -->
+        </li>
+
+		<!-- <li class="field comp-setting-entry is-set">
 			<div class="wrapper-comp-setting">
-				<label class="label setting-label" for="scorm_file">Upload file</label>
-				<input class="input setting-input" name="scorm_file" id="scorm_file" type="file"
-					   accept="video/mp4,video/x-m4v,video/*"/>
+				<label class="label setting-label custom-font" for="uploaded_video">{% trans "Upload .mp4 file" %}</label>
+				<input class="input setting-input custom-font" name="uploaded_video" id="uploaded_video" type="file"
+			 		   accept="video/mp4,video/x-m4v,video/*"/>
 			</div>
+			<span class="tip setting-help" id="wip_feature">{% trans "WIP feature" %}</span>
+		</li> -->
+
+		<li class="field comp-setting-entry is-set">
+			<div class="wrapper-comp-setting">
+				<label class="label setting-label custom-font" for="solutions">{% trans "Upload video to:" %}</label>
+				<div class="tooltip-container">	
+					<i class="ion-information-circled"></i> 
+					<span id="downward-tooltip">{% trans "Where you want to store the uploaded video" %}</span>			
+				</div> 
+				<select class="solution-selection custom-font" id="solutions">
+					<option value="none" style="font-weight: bold;">{% trans "None" %}</option>
+					<option value="youtube">{% trans "YouTube channel" %}</option>
+				</select>
+			</div>
+			<!-- <span class="tip setting-help">{% trans "How you want to upload the video" %}</span> -->
+		</li>		
+
+		<li class="field comp-setting-entry is-set" id="url-input">
+			<div class="wrapper-comp-setting">
+				<label class="label setting-label custom-font" for="video-url">{% trans "Video URL or ID:" %}</label>
+				<div class="tooltip-container">	
+					<i class="ion-information-circled"></i> 
+					<span id="downward-tooltip" style="text-align: left;">
+						{% trans "E.g.," %} <br/>
+						"https://www.youtube.com/watch?v=12345"<br/>
+						"https://youtu.be/12345"<br/>
+						"12345"
+					</span>			
+				</div> 
+				{% if videoloader_xblock.video_embedded_url %}
+				<input class="input setting-input custom-font" name="video-url" id="video-url" type="text" value="{{ videoloader_xblock.video_embedded_url }}"/>
+				{% else %}
+				<input class="input setting-input custom-font" name="video-url" id="video-url" type="text" />
+				{% endif %}
+			</div>
+			<!-- <span class="tip setting-help">{% trans "Generated URL or ID when uploading the video to HACHIUM YouTube channel" %}</span> -->
 		</li>
 
 	</ul>
 
+	<!-- JS gets value of "was_url_embedded" through this tag. -->
+	<p id="was-url-embedded" style="display: none;">{{ videoloader_xblock.was_url_embedded }}</p>
+
 	<div class="xblock-actions">
 		<ul>
 			<li class="action-item">
-				<a href="#" class="button action-primary save-button">Save</a>
+				<a href="#" class="button action-primary save-button">{% trans "Save" %}</a>
 			</li>
 			<li class="action-item">
-				<a href="#" class="button cancel-button">Cancel</a>
+				<a href="#" class="button cancel-button">{% trans "Cancel" %}</a>
 			</li>
 		</ul>
 	</div>

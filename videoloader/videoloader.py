@@ -5,7 +5,7 @@ import pkg_resources
 
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
-from xblock.fields import Integer, Scope, String
+from xblock.fields import Integer, Scope, String, Boolean
 from webob import Response
 from django.core.files.storage import default_storage
 from django.core.files import File
@@ -20,20 +20,30 @@ class VideoLoaderXBlock(XBlock):
 	An XBlock provides capability to store and load video on edX platform.
 	"""
 
+	# TODO: Not hard code tooltips.
 	display_name = String(
 		display_name=_("Display Name"),
-		help=_("Display name for this module"),
-		default="Video module",
+		help=_("Display name of the uploaded video"),
+		default="HACHIUM lesson video", # XBlock automatically access "default" attribute.
 		scope=Scope.settings,
 	)
 
-	internal_video_url = String(
-		default=None,
-		scope=Scope.settings,
-	)
+	# Must declare url as String to get rid of errors.
+	internal_video_url = String()
 
 	message = String(
 		default="'EDIT' this unit to add video.",
+		scope=Scope.settings,
+	)
+
+	video_embedded_url = String(
+		default="",
+		scope=Scope.settings,
+	)
+
+	# Make this Boolean.
+	was_url_embedded = Boolean(
+		default=False,
 		scope=Scope.settings,
 	)
 
@@ -48,6 +58,7 @@ class VideoLoaderXBlock(XBlock):
 		data = pkg_resources.resource_string(__name__, path)
 		return data.decode("utf8")
 
+	# Could not assign "Scope.settings" fields inside student view or error "xblock.exceptions.InvalidScopeError" would occur.
 	def student_view(self, context=None):
 		"""
 		The primary view of the VideoLoader, shown to students
@@ -55,6 +66,8 @@ class VideoLoaderXBlock(XBlock):
 		"""
 
 		student_context = {
+			"display_name": self.display_name,
+			"video_embedded_url": self.video_embedded_url,
 			"message": self.message,
 			"internal_video_url": default_storage.url(self.internal_video_url) if self.internal_video_url else None,
 		}
@@ -73,8 +86,11 @@ class VideoLoaderXBlock(XBlock):
 		The primary view of the VideoLoaderXBlock, shown to students
 		when viewing courses.
 		"""
+
 		studio_context = {
-			"internal_video_url": default_storage.url(self.internal_video_url),
+			"display_name": self.fields["display_name"],
+			"was_url_embedded": self.was_url_embedded,
+			"videoloader_xblock": self,
 		}
 		studio_context.update(context or {})
 
@@ -96,14 +112,43 @@ class VideoLoaderXBlock(XBlock):
 	@XBlock.handler
 	def studio_submit(self, request, _suffix):
 
-		package_file = request.params["file"].file
+		# TODO: Add feature to convert .mp4 to .m3u8 and store the video on GCS.
+		# package_file = request.params["file"].file
 
-		path = default_storage.save(package_file.name, File(package_file))
-		self.internal_video_url = path
+		# path = default_storage.save(package_file.name, File(package_file))
+		# self.internal_video_url = path
+
+		self.display_name = request.params["display_name"]
+
+		# TODO: Move these configuration to a seperated file.
+		YOUTUBE_SHORT_VIDEO_URL_PREFIX = "https://youtu.be/"
+		YOUTUBE_VIDEO_URL_PREFIX = "https://www.youtube.com/watch?v="
+		YOUTUBE_EMBEDDED_URL_PREFIX = "https://www.youtube.com/embed/"
+
+		video_url = request.params["video_url"]
+		
+		self.update_xblock_status(video_url)
+
+		# "0" is starting index of the substring.
+		if video_url.find(YOUTUBE_SHORT_VIDEO_URL_PREFIX) == 0:
+			video_id = video_url[17:]
+			self.video_embedded_url = YOUTUBE_EMBEDDED_URL_PREFIX + video_id
+		elif video_url.find(YOUTUBE_VIDEO_URL_PREFIX) == 0:
+			video_id = video_url[32:]
+			self.video_embedded_url = YOUTUBE_EMBEDDED_URL_PREFIX + video_url[32:]
+		elif video_url.find(YOUTUBE_EMBEDDED_URL_PREFIX) == 0: 
+			self.video_embedded_url = video_url
+		elif not video_url:
+			self.video_embedded_url = None
+		else: 
+			self.video_embedded_url = YOUTUBE_EMBEDDED_URL_PREFIX + video_url
 
 		# TODO: Handle errors.
 		response = {"result": "success", "errors": []}
 		return self.json_response(response)
+	
+	def update_xblock_status(self, video_url): 
+		self.was_url_embedded = True if video_url else False
 
 	# TO-DO: change this to create the scenarios you'd like to see in the
 	# workbench while developing your XBlock.
